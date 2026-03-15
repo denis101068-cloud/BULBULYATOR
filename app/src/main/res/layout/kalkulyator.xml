@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@drawable/gradient">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="365dp"
+        android:layout_height="590dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="115dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="116dp"
+        android:elevation="50dp"
+        app:cardCornerRadius="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+
+            android:layout_margin="20dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_weight="1"
+                    android:layout_marginBottom="20dp"
+                    android:id="@+id/nachaloField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:hint="НАЧАЛО">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:inputType="number"
+                        android:id="@+id/nachaloInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="20dp"
+                    android:id="@+id/konecField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="КОНЕЦ"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:inputType="number"
+                        android:id="@+id/konecInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cornerRadius="10dp"
+    android:id="@+id/filledButton"
+    style="@style/Widget.Material3.Button.Icon"
+    android:text="Задача 1"
+    android:textSize="20dp"
+    android:elevation="20dp"
+    android:backgroundTint="#0041FF"
+/>
+
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
