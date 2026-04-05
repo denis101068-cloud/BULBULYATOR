@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="#121212">
 
     <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#CB11AB"
+        android:background="#FFD700"
         android:orientation="horizontal"
         android:padding="15dp"
         android:gravity="center_vertical">
@@ -20,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="‹"
-            android:textColor="@android:color/white"
+            android:textColor="#FFFFFF"
             android:textSize="32sp"
             android:clickable="true"
             android:padding="5dp" />
@@ -30,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Оформление заказа"
-            android:textColor="@android:color/white"
+            android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginStart="10dp" />
@@ -65,7 +66,7 @@
                         android:id="@+id/checkoutProductImage"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="#F0F0F0"
+                        android:background="#2A2A2A"
                         android:scaleType="centerCrop" />
 
                     <LinearLayout
@@ -90,7 +91,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="45 990 ₽"
-                            android:textColor="#CB11AB"
+                            android:textColor="#FFD700"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -98,13 +99,26 @@
             </androidx.cardview.widget.CardView>
 
             <!-- Адрес доставки -->
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="📍 Адрес доставки"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_location"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Адрес доставки"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -181,13 +195,26 @@
             </androidx.cardview.widget.CardView>
 
             <!-- Способ оплаты -->
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="💳 Данные карты"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_card"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Данные карты"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -335,7 +362,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="45 990 ₽"
-                    android:textColor="#CB11AB"
+                    android:textColor="#FFD700"
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -345,7 +372,7 @@
                 style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#CB11AB"
+                android:backgroundTint="#FFD700"
                 android:text="Подтвердить заказ"
                 android:textSize="16sp"
                 app:cornerRadius="10dp" />

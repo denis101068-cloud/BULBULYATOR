@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="#121212">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#CB11AB"
+        android:background="#FFD700"
         android:orientation="horizontal"
         android:padding="15dp"
         android:gravity="center_vertical">
@@ -19,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="&#8249;"
-            android:textColor="@android:color/white"
+            android:textColor="#FFFFFF"
             android:textSize="32sp"
             android:clickable="true"
             android:padding="5dp" />
@@ -29,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Редактировать профиль"
-            android:textColor="@android:color/white"
+            android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginStart="10dp" />
@@ -72,7 +73,7 @@
                         android:id="@+id/bannerPreview"
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
-                        android:background="#E0E0E0"
+                        android:background="#333333"
                         android:scaleType="centerCrop"
                         android:layout_marginBottom="10dp" />
 
@@ -82,9 +83,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Выбрать баннер (фото / GIF)"
-                        android:textColor="#CB11AB"
+                        android:textColor="#FFD700"
                         app:cornerRadius="8dp"
-                        app:strokeColor="#CB11AB" />
+                        app:strokeColor="#FFD700" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -108,7 +109,7 @@
                         android:id="@+id/avatarPreview"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="#E0E0E0"
+                        android:background="#333333"
                         android:scaleType="centerCrop" />
 
                     <LinearLayout
@@ -132,9 +133,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Выбрать (фото / GIF)"
-                            android:textColor="#CB11AB"
+                            android:textColor="#FFD700"
                             app:cornerRadius="8dp"
-                            app:strokeColor="#CB11AB" />
+                            app:strokeColor="#FFD700" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -160,7 +161,7 @@
                         android:layout_marginBottom="12dp"
                         android:hint="Имя"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        app:boxStrokeColor="#CB11AB">
+                        app:boxStrokeColor="#FFD700">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/nameInput"
@@ -174,7 +175,7 @@
                         android:layout_height="wrap_content"
                         android:hint="О себе"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        app:boxStrokeColor="#CB11AB">
+                        app:boxStrokeColor="#FFD700">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/bioInput"
@@ -194,7 +195,7 @@
                 style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#CB11AB"
+                android:backgroundTint="#FFD700"
                 android:text="Сохранить"
                 app:cornerRadius="10dp" />
 

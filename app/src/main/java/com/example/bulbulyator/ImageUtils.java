@@ -14,13 +14,13 @@ public class ImageUtils {
         }
         if (url.startsWith("http")) {
             Glide.with(ctx).load(url)
-                    .placeholder(R.drawable.ic_launcher_background)
+                    .placeholder(R.drawable.ovcs86zip95s2pfz6d0k9slwfbp27db0)
                     .error(R.drawable.ic_launcher_background)
                     .centerCrop().into(into);
         } else {
             try {
                 Glide.with(ctx).load(Uri.parse(url))
-                        .placeholder(R.drawable.ic_launcher_background)
+                        .placeholder(R.drawable.ovcs86zip95s2pfz6d0k9slwfbp27db0)
                         .error(R.drawable.ic_launcher_background)
                         .centerCrop().into(into);
             } catch (Exception e) {

@@ -1,7 +1,6 @@
 package com.example.bulbulyator;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -21,12 +19,12 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class FavoritesActivity extends AppCompatActivity {
+public class FavoritesActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresh;
-    private TextView emptyView;
-    private AppDatabase db;
+    private View emptyView;
+    private SupabaseDb db;
     private int userId;
 
     @Override
@@ -34,54 +32,41 @@ public class FavoritesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
-        db = AppDatabase.getInstance(this);
+        db     = SupabaseDb.getInstance();
         userId = getSharedPreferences("UserPrefs", MODE_PRIVATE).getInt("userId", -1);
 
         findViewById(R.id.backButton).setOnClickListener(v -> finish());
-
         recyclerView = findViewById(R.id.favoritesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swipeRefresh = findViewById(R.id.swipeRefresh);
-        emptyView = findViewById(R.id.emptyView);
+        emptyView    = findViewById(R.id.emptyView);
 
-        swipeRefresh.setColorSchemeColors(0xFFCB11AB);
-        swipeRefresh.setOnRefreshListener(() -> {
-            loadFavorites();
-            swipeRefresh.setRefreshing(false);
-        });
+        swipeRefresh.setColorSchemeColors(0xFFFFD700);
+        swipeRefresh.setOnRefreshListener(() -> { loadFavorites(); swipeRefresh.setRefreshing(false); });
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        loadFavorites();
-    }
+    protected void onResume() { super.onResume(); applyTheme(); loadFavorites(); }
 
     private void loadFavorites() {
-        List<Product> products = db.favoriteDao().getUserFavoriteProducts(userId);
-        emptyView.setVisibility(products.isEmpty() ? View.VISIBLE : View.GONE);
-        recyclerView.setVisibility(products.isEmpty() ? View.GONE : View.VISIBLE);
-        recyclerView.setAdapter(new FavoriteAdapter(products));
+        new Thread(() -> {
+            List<Product> products = db.favoriteDao().getUserFavoriteProducts(userId);
+            runOnUiThread(() -> {
+                emptyView.setVisibility(products.isEmpty() ? View.VISIBLE : View.GONE);
+                recyclerView.setVisibility(products.isEmpty() ? View.GONE : View.VISIBLE);
+                recyclerView.setAdapter(new FavoriteAdapter(products));
+            });
+        }).start();
     }
 
     class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
         private final List<Product> products;
+        FavoriteAdapter(List<Product> p) { this.products = p; }
 
-        FavoriteAdapter(List<Product> products) { this.products = products; }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_favorite, parent, false);
-            return new ViewHolder(view);
+        @NonNull public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_favorite, parent, false));
         }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.bind(products.get(position), position);
-        }
-
-        @Override
+        public void onBindViewHolder(@NonNull ViewHolder h, int pos) { h.bind(products.get(pos), pos); }
         public int getItemCount() { return products.size(); }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -89,41 +74,39 @@ public class FavoritesActivity extends AppCompatActivity {
             TextView productName, productDescription, productPrice;
             Button removeButton, buyButton;
 
-            ViewHolder(View itemView) {
-                super(itemView);
-                productImage = itemView.findViewById(R.id.productImage);
-                productName = itemView.findViewById(R.id.productName);
-                productDescription = itemView.findViewById(R.id.productDescription);
-                productPrice = itemView.findViewById(R.id.productPrice);
-                removeButton = itemView.findViewById(R.id.removeButton);
-                buyButton = itemView.findViewById(R.id.buyButton);
+            ViewHolder(View v) {
+                super(v);
+                productImage       = v.findViewById(R.id.productImage);
+                productName        = v.findViewById(R.id.productName);
+                productDescription = v.findViewById(R.id.productDescription);
+                productPrice       = v.findViewById(R.id.productPrice);
+                removeButton       = v.findViewById(R.id.removeButton);
+                buyButton          = v.findViewById(R.id.buyButton);
             }
 
             void bind(Product product, int position) {
+                ((androidx.cardview.widget.CardView) itemView).setCardBackgroundColor(ThemeManager.getCardBg(FavoritesActivity.this));
+                productName.setTextColor(ThemeManager.getTextPrimary(FavoritesActivity.this));
+                productDescription.setTextColor(ThemeManager.getTextSecondary(FavoritesActivity.this));
+
                 ImageUtils.load(FavoritesActivity.this, product.imageUrl, productImage);
                 productName.setText(product.name);
                 productDescription.setText(product.description);
-                NumberFormat fmt = NumberFormat.getInstance(new Locale("ru", "RU"));
-                productPrice.setText(fmt.format(product.price) + " ₽");
+                productPrice.setText(NumberFormat.getInstance(new Locale("ru", "RU")).format(product.price) + " ₽");
 
-                removeButton.setOnClickListener(v -> {
+                removeButton.setOnClickListener(v -> new Thread(() -> {
                     db.favoriteDao().delete(userId, product.id);
-                    products.remove(position);
-                    notifyDataSetChanged();
-                    if (products.isEmpty()) {
-                        emptyView.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
-                    }
-                    Toast.makeText(FavoritesActivity.this, "Удалено из избранного", Toast.LENGTH_SHORT).show();
-                });
+                    runOnUiThread(() -> { products.remove(position); notifyDataSetChanged();
+                        if (products.isEmpty()) { emptyView.setVisibility(View.VISIBLE); recyclerView.setVisibility(View.GONE); }
+                        Toast.makeText(FavoritesActivity.this, "Удалено из избранного", Toast.LENGTH_SHORT).show();
+                    });
+                }).start());
 
                 buyButton.setOnClickListener(v -> {
-                    Intent intent = new Intent(FavoritesActivity.this, CheckoutActivity.class);
-                    intent.putExtra("productId", product.id);
-                    intent.putExtra("productName", product.name);
-                    intent.putExtra("productPrice", product.price);
-                    intent.putExtra("productImageUrl", product.imageUrl);
-                    startActivity(intent);
+                    Intent i = new Intent(FavoritesActivity.this, CheckoutActivity.class);
+                    i.putExtra("productId", product.id); i.putExtra("productName", product.name);
+                    i.putExtra("productPrice", product.price); i.putExtra("productImageUrl", product.imageUrl);
+                    startActivity(i);
                 });
             }
         }

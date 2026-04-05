@@ -10,20 +10,18 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="365dp"
-        android:layout_height="525dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="115dp"
-        android:layout_marginEnd="56dp"
-        android:layout_marginBottom="116dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:elevation="50dp"
         app:cardCornerRadius="25dp"
+        app:cardBackgroundColor="#1E1E1E"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-
             android:layout_margin="20dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -31,95 +29,88 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="8dp"
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Авторизация"
-                android:textSize="35dp"
-                android:textStyle="bold" />
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="#FFD700" />
 
             <TextView
                 android:layout_marginBottom="20dp"
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Текст о вашей програме"
-                android:textSize="13dp" />
+                android:text="Войдите в свой аккаунт"
+                android:textSize="13sp"
+                android:textColor="#AAAAAA" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="16dp"
                 android:id="@+id/textField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email">
+                android:hint="Email"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textInputEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:hint="Пароль"
                 app:endIconMode="password_toggle"
-                >
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:textColor="#FFFFFF" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.button.MaterialButton
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="16dp"
                 app:cornerRadius="10dp"
                 android:id="@+id/filledButton"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Авторизация"
-                android:elevation="20dp"
-                android:backgroundTint="#0041FF"
-                />
+                android:text="Войти"
+                android:elevation="4dp"
+                android:backgroundTint="#FFD700"
+                android:textColor="#121212"
+                android:textStyle="bold" />
 
             <TextView
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="12dp"
                 android:id="@+id/textView3"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Впервые здесь? Зарегестрируйтесь"
-                android:textSize="13dp" />
+                android:text="Впервые здесь? Зарегистрируйтесь"
+                android:textSize="13sp"
+                android:textColor="#AAAAAA" />
+
             <com.google.android.material.button.MaterialButton
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="8dp"
                 app:cornerRadius="10dp"
-                app:strokeColor="@color/blue"
-                android:textColor="@color/blue"
-                app:iconTint="@color/blue"
+                app:strokeColor="#FFD700"
+                android:textColor="#FFD700"
                 android:id="@+id/gosButton"
-                app:icon="@drawable/heart"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Авторизация через Госуслуги"
-                />
-            <com.google.android.material.button.MaterialButton
-                app:iconTint="@color/blue"
-                app:icon="@drawable/headphone"
-                app:iconSize="20dp"
-                app:cornerRadius="10dp"
-                android:id="@+id/googleButton"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Авторизация через Google"
-                app:strokeColor="@color/blue"
-                android:textColor="@color/blue"
-                />
+                android:text="Регистрация" />
 
         </LinearLayout>
 

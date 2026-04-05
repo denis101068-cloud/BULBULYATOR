@@ -10,38 +10,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class CheckoutActivity extends AppCompatActivity {
+public class CheckoutActivity extends BaseActivity {
 
     private TextInputEditText cityInput, streetInput, houseInput, apartmentInput;
     private TextInputEditText cardNumberInput, cardExpiryInput, cardCvvInput;
-    private Button confirmButton;
     private TextView totalPriceText, productNameView, productPriceView;
     private ImageView productImage;
 
-    private AppDatabase db;
+    private SupabaseDb db;
     private SharedPreferences prefs;
-    private int userId;
-
-    private int productId;
-    private String productNameStr;
+    private int userId, productId;
+    private String productNameStr, productImageUrl;
     private double productPriceVal;
-    private String productImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
 
-        db = AppDatabase.getInstance(this);
-        prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        db     = SupabaseDb.getInstance();
+        prefs  = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userId = prefs.getInt("userId", -1);
 
         productId       = getIntent().getIntExtra("productId", -1);
@@ -49,7 +43,6 @@ public class CheckoutActivity extends AppCompatActivity {
         productPriceVal = getIntent().getDoubleExtra("productPrice", 0);
         productImageUrl = getIntent().getStringExtra("productImageUrl");
 
-        // Views
         cityInput       = findViewById(R.id.cityInput);
         streetInput     = findViewById(R.id.streetInput);
         houseInput      = findViewById(R.id.houseInput);
@@ -57,128 +50,72 @@ public class CheckoutActivity extends AppCompatActivity {
         cardNumberInput = findViewById(R.id.cardNumberInput);
         cardExpiryInput = findViewById(R.id.cardExpiryInput);
         cardCvvInput    = findViewById(R.id.cardCvvInput);
-        confirmButton   = findViewById(R.id.confirmOrderButton);
         totalPriceText  = findViewById(R.id.totalPriceText);
         productNameView = findViewById(R.id.checkoutProductName);
         productPriceView= findViewById(R.id.checkoutProductPrice);
         productImage    = findViewById(R.id.checkoutProductImage);
 
-        // Заполняем данные товара
         productNameView.setText(productNameStr);
-        NumberFormat fmt = NumberFormat.getInstance(new Locale("ru", "RU"));
-        String priceStr = fmt.format(productPriceVal) + " ₽";
+        String priceStr = NumberFormat.getInstance(new Locale("ru", "RU")).format(productPriceVal) + " ₽";
         productPriceView.setText(priceStr);
         totalPriceText.setText(priceStr);
 
-        // Загружаем изображение
         if (productImageUrl != null) {
-            if (productImageUrl.startsWith("http")) {
-                Glide.with(this).load(productImageUrl)
-                        .placeholder(R.drawable.ic_launcher_background)
-                        .centerCrop().into(productImage);
-            } else {
-                try {
-                    Glide.with(this).load(Uri.parse(productImageUrl))
-                            .placeholder(R.drawable.ic_launcher_background)
-                            .centerCrop().into(productImage);
-                } catch (Exception e) {
-                    productImage.setImageResource(R.drawable.ic_launcher_background);
-                }
-            }
+            if (productImageUrl.startsWith("http")) Glide.with(this).load(productImageUrl).centerCrop().into(productImage);
+            else { try { Glide.with(this).load(Uri.parse(productImageUrl)).centerCrop().into(productImage); } catch (Exception e) { productImage.setImageResource(R.drawable.ic_launcher_background); } }
         }
 
         setupCardFormatting();
-
         findViewById(R.id.backButton).setOnClickListener(v -> finish());
-        confirmButton.setOnClickListener(v -> confirmOrder());
+        findViewById(R.id.confirmOrderButton).setOnClickListener(v -> confirmOrder());
     }
 
-    // Форматирование номера карты: 1234 5678 9012 3456
+    @Override
+    protected void onResume() { super.onResume(); applyTheme(); }
+
     private void setupCardFormatting() {
         cardNumberInput.addTextChangedListener(new TextWatcher() {
-            private boolean isFormatting;
-
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
+            boolean fmt;
+            public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
+            public void onTextChanged(CharSequence s, int a, int b, int c) {}
             public void afterTextChanged(Editable s) {
-                if (isFormatting) return;
-                isFormatting = true;
-
-                // Убираем все пробелы
-                String digits = s.toString().replaceAll(" ", "");
-                if (digits.length() > 16) digits = digits.substring(0, 16);
-
-                // Добавляем пробелы каждые 4 цифры
-                StringBuilder formatted = new StringBuilder();
-                for (int i = 0; i < digits.length(); i++) {
-                    if (i > 0 && i % 4 == 0) formatted.append(" ");
-                    formatted.append(digits.charAt(i));
-                }
-
-                s.replace(0, s.length(), formatted.toString());
-                isFormatting = false;
+                if (fmt) return; fmt = true;
+                String d = s.toString().replaceAll(" ", "");
+                if (d.length() > 16) d = d.substring(0, 16);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < d.length(); i++) { if (i > 0 && i % 4 == 0) sb.append(" "); sb.append(d.charAt(i)); }
+                s.replace(0, s.length(), sb.toString()); fmt = false;
             }
         });
-
-        // Форматирование срока: MM/YY
         cardExpiryInput.addTextChangedListener(new TextWatcher() {
-            private boolean isFormatting;
-
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
+            boolean fmt;
+            public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
+            public void onTextChanged(CharSequence s, int a, int b, int c) {}
             public void afterTextChanged(Editable s) {
-                if (isFormatting) return;
-                isFormatting = true;
-
-                String digits = s.toString().replaceAll("/", "");
-                if (digits.length() > 4) digits = digits.substring(0, 4);
-
-                StringBuilder formatted = new StringBuilder();
-                for (int i = 0; i < digits.length(); i++) {
-                    if (i == 2) formatted.append("/");
-                    formatted.append(digits.charAt(i));
-                }
-
-                s.replace(0, s.length(), formatted.toString());
-                isFormatting = false;
+                if (fmt) return; fmt = true;
+                String d = s.toString().replaceAll("/", "");
+                if (d.length() > 4) d = d.substring(0, 4);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < d.length(); i++) { if (i == 2) sb.append("/"); sb.append(d.charAt(i)); }
+                s.replace(0, s.length(), sb.toString()); fmt = false;
             }
         });
     }
 
     private void confirmOrder() {
-        String city      = cityInput.getText().toString().trim();
-        String street    = streetInput.getText().toString().trim();
-        String house     = houseInput.getText().toString().trim();
-        String apartment = apartmentInput.getText().toString().trim();
-        String cardNum   = cardNumberInput.getText().toString().replaceAll(" ", "");
-        String expiry    = cardExpiryInput.getText().toString().trim();
-        String cvv       = cardCvvInput.getText().toString().trim();
+        String city   = cityInput.getText().toString().trim();
+        String street = streetInput.getText().toString().trim();
+        String house  = houseInput.getText().toString().trim();
+        String apt    = apartmentInput.getText().toString().trim();
+        String card   = cardNumberInput.getText().toString().replaceAll(" ", "");
+        String expiry = cardExpiryInput.getText().toString().trim();
+        String cvv    = cardCvvInput.getText().toString().trim();
 
-        // Валидация адреса
-        if (city.isEmpty() || street.isEmpty() || house.isEmpty()) {
-            Toast.makeText(this, "Заполните адрес доставки", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (city.isEmpty() || street.isEmpty() || house.isEmpty()) { Toast.makeText(this, "Заполните адрес доставки", Toast.LENGTH_SHORT).show(); return; }
+        if (card.length() < 16) { Toast.makeText(this, "Введите корректный номер карты", Toast.LENGTH_SHORT).show(); return; }
+        if (expiry.length() < 5) { Toast.makeText(this, "Введите срок действия карты", Toast.LENGTH_SHORT).show(); return; }
+        if (cvv.length() < 3) { Toast.makeText(this, "Введите CVV/CVC код", Toast.LENGTH_SHORT).show(); return; }
 
-        // Валидация карты
-        if (cardNum.length() < 16) {
-            Toast.makeText(this, "Введите корректный номер карты (16 цифр)", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (expiry.length() < 5) {
-            Toast.makeText(this, "Введите срок действия карты (ММ/ГГ)", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (cvv.length() < 3) {
-            Toast.makeText(this, "Введите CVV/CVC код (3 цифры)", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Создаём заказ
         Order order = new Order();
         order.userId       = userId;
         order.productId    = productId;
@@ -186,18 +123,16 @@ public class CheckoutActivity extends AppCompatActivity {
         order.productPrice = productPriceVal;
         order.status       = "В пути";
         order.orderDate    = System.currentTimeMillis();
-        db.orderDao().insert(order);
 
-        // Маскируем номер карты для отображения
-        String maskedCard = "**** **** **** " + cardNum.substring(12);
+        String maskedCard = "**** **** **** " + card.substring(12);
+        String address = city + ", " + street + ", д." + house + (apt.isEmpty() ? "" : ", кв." + apt);
 
-        Toast.makeText(this,
-                "Заказ оформлен!\n" +
-                "Доставка: " + city + ", " + street + ", д." + house +
-                (apartment.isEmpty() ? "" : ", кв." + apartment) + "\n" +
-                "Карта: " + maskedCard,
-                Toast.LENGTH_LONG).show();
-
-        finish();
+        new Thread(() -> {
+            db.orderDao().insert(order);
+            runOnUiThread(() -> {
+                Toast.makeText(this, "Заказ оформлен!\nДоставка: " + address + "\nКарта: " + maskedCard, Toast.LENGTH_LONG).show();
+                finish();
+            });
+        }).start();
     }
 }

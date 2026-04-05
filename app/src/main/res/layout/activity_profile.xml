@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="@color/bg_dark">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,41 +15,62 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Header -->
-            <LinearLayout
+            <!-- Баннер + аватар + инфо — единый блок -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#CB11AB"
-                android:orientation="vertical">
+                android:layout_height="220dp">
 
-                <!-- Баннер -->
+                <!-- Баннер на весь блок -->
                 <ImageView
                     android:id="@+id/profileBanner"
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:background="#9B0080" />
+                    android:background="#1A1A1A" />
 
+                <!-- Затемнение поверх баннера -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#99000000" />
+
+                <!-- Карандаш в правом верхнем углу -->
+                <TextView
+                    android:id="@+id/editProfileButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="&#9998;"
+                    android:textColor="@color/gold"
+                    android:textSize="28sp"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <!-- Аватар + имя + email + bio внизу блока -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
                     android:orientation="horizontal"
                     android:padding="15dp"
                     android:gravity="center_vertical">
 
-                    <!-- Аватар -->
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/profileAvatar"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
-                        android:background="@android:color/white"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_launcher_foreground" />
+                        android:src="@drawable/ic_launcher_foreground"
+                        app:shapeAppearanceOverlay="@style/CircleImageView" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
+                        android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -57,7 +79,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Имя пользователя"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/gold"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -67,7 +89,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="email@example.com"
-                            android:textColor="@android:color/white"
+                            android:textColor="#CCCCCC"
                             android:textSize="13sp" />
 
                         <TextView
@@ -76,32 +98,23 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text=""
-                            android:textColor="#FFDDFF"
+                            android:textColor="#AAAAAA"
                             android:textSize="12sp"
                             android:maxLines="2"
                             android:ellipsize="end"
                             android:visibility="gone" />
                     </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/editProfileButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="&#9998;"
-                        android:textColor="@android:color/white"
-                        android:textSize="22sp"
-                        android:padding="8dp"
-                        android:clickable="true" />
                 </LinearLayout>
-            </LinearLayout>
+            </FrameLayout>
 
             <!-- Menu Items -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="2dp">
+                android:layout_margin="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -115,26 +128,32 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:orientation="horizontal"
-                        android:padding="15dp">
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:src="@drawable/ic_orders"
+                            android:layout_marginEnd="14dp" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="&#128230; Мои заказы"
+                            android:text="Мои заказы"
+                            android:textColor="@color/text_primary"
                             android:textSize="16sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="&#8250;"
+                            android:textColor="@color/gold"
                             android:textSize="20sp" />
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#E0E0E0" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
 
                     <LinearLayout
                         android:id="@+id/favoritesButton"
@@ -143,22 +162,30 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:orientation="horizontal"
-                        android:padding="15dp">
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:src="@drawable/ic_favorite"
+                            android:layout_marginEnd="14dp" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="&#10084;&#65039; Избранное"
+                            android:text="Избранное"
+                            android:textColor="@color/text_primary"
                             android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/favoritesBadge"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:background="#CB11AB"
+                            android:background="@color/gold"
                             android:gravity="center"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/black"
                             android:textSize="12sp"
                             android:textStyle="bold"
                             android:visibility="gone"
@@ -168,13 +195,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="&#8250;"
+                            android:textColor="@color/gold"
                             android:textSize="20sp" />
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#E0E0E0" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
 
                     <LinearLayout
                         android:id="@+id/productsButton"
@@ -183,26 +208,32 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:orientation="horizontal"
-                        android:padding="15dp">
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:src="@drawable/ic_search"
+                            android:layout_marginEnd="14dp" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="&#128269; Поиск товаров"
+                            android:text="Поиск товаров"
+                            android:textColor="@color/text_primary"
                             android:textSize="16sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="&#8250;"
+                            android:textColor="@color/gold"
                             android:textSize="20sp" />
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#E0E0E0" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
 
                     <LinearLayout
                         android:id="@+id/addProductButton"
@@ -211,36 +242,60 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:orientation="horizontal"
-                        android:padding="15dp">
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:src="@drawable/ic_add_product"
+                            android:layout_marginEnd="14dp" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="&#10133; Разместить свой товар"
+                            android:text="Разместить свой товар"
+                            android:textColor="@color/text_primary"
                             android:textSize="16sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="&#8250;"
+                            android:textColor="@color/gold"
                             android:textSize="20sp" />
                     </LinearLayout>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Logout Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/logoutButton"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="4dp"
                 android:text="Выйти из аккаунта"
-                android:textColor="#CB11AB"
+                android:textColor="@color/gold"
                 app:cornerRadius="10dp"
-                app:strokeColor="#CB11AB" />
+                app:strokeColor="@color/gold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/settingsButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="24dp"
+                android:text="&#9881; Настройки"
+                android:textColor="@color/text_secondary"
+                app:cornerRadius="10dp"
+                app:strokeColor="@color/divider" />
 
         </LinearLayout>
     </ScrollView>
